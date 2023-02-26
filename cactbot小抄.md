@@ -122,6 +122,41 @@ Options.Triggers.push({
 
 
 
+#### data变量：
+
+在触发器使用过程中，你除了使用在js文件中声明的全局变量，也可以使用data变量
+
+data变量不仅可以在每个触发器中访问，同时团灭后data变量会自动初始化重置
+
+
+
+**添加data变量**：添加方法有两种，一种是initData: () => {}在触发器开头添加初始值，一种则是在使用的过程中data.xxx，如果data变量中没有xxx属性则会自动创建
+
+initData: () => {}  向data里加入“全局变量”
+
+```js
+//这是绝欧触发器中创建初始data变量的例子 变量为 'inLine' '塔次数' '一运'
+Options.Triggers.push({
+	zoneId: 1122,
+	overrideTimelineFile: true,
+	timelineFile: '绝欧.txt',
+	initData: () => {
+		return {
+			inLine: {},
+			塔次数: 0,
+			一运: false,
+		};
+	}，
+    xxxxxxx
+
+//调用例子        
+run: (data, matches) => data.塔次数 ++,
+```
+
+
+
+
+
 #### 其它：
 
 **resetWhenOutOfCombat** 布尔值，默认为true。 该值为true时，时间轴和触发器均在脱战时自动重置。 否则，需要手动调用`data.StopCombat()`使其重置。
@@ -164,25 +199,11 @@ Options.Triggers.push({
 
 **立即执行动作：preRun: function(data, matches)** 当触发器被激活时，该函数会在条件判定成功后立刻执行。不受 delaySeconds 设置与否的影响。
 
-**promise: function(data, matches)** 设置该属性为返回Promise的函数，则触发器会在其resolve之前等待。 这个函数会在 `preRun` 之后，`delaySeconds` 之前执行。
+**异步：promise: function(data, matches)** 设置该属性为返回Promise的函数，则触发器会在其resolve之前等待。 这个函数会在 `preRun` 之后，`delaySeconds` 之前执行。通常用来获取战斗数据
 
 **等待时间：delaySeconds ：（数字）**规定从正则表达式匹配上到触发器激活之间的等待时间，单位为秒。 其值可以是数字或返回数字的 `function(data, matches)`。
 
 **最后执行动作：run: function(data, matches)** 当触发器被激活时，该函数会作为触发器最末尾的步骤执行。
-
-**添加data变量：initData: () => {}**  向data里加入“全局变量”，值为返回键值对的`function()`。和直接在文件头部定义全局变量的办法相比，这样团灭后数据会自动清除。
-
-```js
-//定义data变量的一个例子，使用时替换即可
-initData: () => {	
-        return {
-            sunbirds: [],
-            sunbirdTethers: [],
-        };
-    },
-//调用例子        
-run: (data, matches) => data.sunbirds.push(matches),
-```
 
 
 
@@ -350,27 +371,32 @@ data = {
 	"job"：
 	"role":
 	"party"：{
-		partyNames(): string[],
-        partyIds(): string[],
-        nameFromId(id: string): string | undefined
-		allianceNames():
-        tankNames():
-		healerNames():
-        dpsNames(): 
-        jobName(name: string): Job | undefined
-        isRole(name: string, role: string): boolean
+		partyNames: string[],
+        partyIds: string[],
+        allianceNames: string[]
+		tankNames: string[]
+		healerNames: string[]
+		dpsNames: string[]
+		
+		isRole(name: string, role: string): boolean
         isTank(name: string): boolean
-        isHealer(name: string): boolean
-        isDPS(name: string): boolean
+        isHealer(name: string): boolean 
+        isDPS(name: string): boolean 
         inParty(name: string): boolean
-        inAlliance(name: string): boolean
+        inAlliance(name: string): boolean 
         otherTank(name: string): string | undefined
-		otherHealer(name: string): string | undefined
+        otherHealer(name: string): string | undefined
+
+		jobName(name: string): Job | undefined 
+		nameFromId(id: string): string | undefined 
+		nameToRole_: object {name:role}
+        idToName_: object {id:name}
 	},
 	"lang":
 	"parserLang":
 	"displayLang":
   	"currentHP": 
+    StopCombat() //手动重置战斗
 }；
 ```
 
@@ -378,11 +404,93 @@ data = {
 
 
 
-## js文件act插件模块：
+## 其他用法
 
-### 1、cactbotself：标点，摄影机获取
+### 获取战斗数据：
 
-![image-20220830205703989](C:\Users\Phil\AppData\Roaming\Typora\typora-user-images\image-20220830205703989.png)
+通常用法如下
+
+```js
+promise: async (data) => {	
+    let entities = await callOverlayHandler({
+        call: 'getCombatants',
+        ids:['1234567','6543321'],
+    });
+    entities = entities.combatants;	//此时的entities是一个包含各种实体对象的数组
+    //下面添加自己的代码
+    console.log(entities[0]);
+},
+```
+
+promise异步方法基本绑定用来使用callOverlayHandler回调函数
+
+**call键必须有，ids键返回符合id数组的战斗实体；也可以使用names键，返回符合name数组的战斗实体**
+
+如果只有call键则返回所有实体
+
+
+
+一个实体对象包含如下数据
+
+```js
+{
+	AggressionStatus: 0
+    BNpcID: 0
+    BNpcNameID: 0
+    CastBuffID: 0
+    CastDurationCurrent: 0
+    CastDurationMax: -36893490000000000000
+    CastTargetID: 0
+    CurrentCP: 0
+    CurrentGP: 0
+    CurrentHP: 68861
+    CurrentMP: 10000
+    CurrentWorldID: 23
+    Distance: null
+    EffectiveDistance: null
+    Effects: [
+        {BuffID: 360, Stack: 10, Timer: 30, ActorID: 3758096384, isOwner: false}
+        {BuffID: 362, Stack: 20, Timer: 30, ActorID: 3758096384, isOwner: false}
+    ]
+    Heading: 3.052429
+    ID: 123456789
+    IsCasting1: 0
+    IsCasting2: 0
+    IsTargetable: false
+    Job: 21
+    Level: 90
+    MaxCP: 0
+    MaxGP: 0
+    MaxHP: 68861
+    MaxMP: 10000
+    ModelStatus: 585
+    MonsterType: 0
+    NPCTargetID: 3758096384
+    Name: "XXXX"
+    OwnerID: 0
+    PCTargetID: 0
+    PartyType: 0
+    PosX: 1.004711
+    PosY: -1.83687568
+    PosZ: -2.70719252e-14
+    Radius: 0.5
+    Status: 0
+    TargetID: 0
+    TransformationId: 0
+    Type: 1
+    WeaponId: 0
+    WorldID: 23
+    WorldName: "Asura"
+}
+```
+
+
+
+### cactbotself：
+
+#### 标点，摄影机获取
+
+下面代码加载js文件头部，用的时候调用camera就可以了
 
 ```js
 let camera;
@@ -390,4 +498,378 @@ addOverlayListener("onPlayerControl", (e) => {
   camera = e.detail;
 });
 ```
+
+
+
+camera：包含了标点信息和镜头信息
+
+```js
+{
+    A: {X: 0, Y: 0, Z: 0, ID: 0, Active: false},
+    B: {X: 0, Y: 0, Z: 0, ID: 1, Active: false},
+    C: {X: 0, Y: 0, Z: 0, ID: 2, Active: false},
+    D: {X: 0, Y: 0, Z: 0, ID: 3, Active: false},
+    FOUR: {X: 0, Y: 0, Z: 0, ID: 7, Active: false},
+    ONE: {X: 0, Y: 0, Z: 0, ID: 4, Active: false},
+    THREE: {X: 0, Y: 0, Z: 0, ID: 6, Active: false},
+    TWO: {X: 0, Y: 0, Z: 0, ID: 5, Active: false},
+    camera: {currentHRotation: -0.076598756, currentVRotation: -0.3909539}
+}
+```
+
+
+
+#### 设置获取
+
+```js
+promise: async (data) => {	
+    let config = await callOverlayHandler({
+    	call: 'getConfig',
+    });
+},
+```
+
+config:包含了以下数据
+
+```js
+{
+    isOpen: false,
+    shunxu: [
+        {order: 0, job: '黑骑'},
+        {order: 1, job: '枪刃'},
+        {order: 2, job: '战士'},
+        {order: 3, job: '骑士'},
+        {order: 4, job: '白魔'},
+        {order: 5, job: '占星'},
+        {order: 6, job: '贤者'},
+        {order: 7, job: '学者'},
+        {order: 8, job: '武士'},
+        {order: 9, job: '武僧'},
+        {order: 10, job: '镰刀'},
+        {order: 11, job: '龙骑'},
+        {order: 12, job: '忍者'},
+        {order: 13, job: '机工'},
+        {order: 14, job: '舞者'},
+        {order: 15, job: '诗人'},
+        {order: 16, job: '黑魔'},
+        {order: 17, job: '召唤'},
+        {order: 18, job: '赤魔'}
+    ]
+}
+```
+
+
+
+
+
+### 鲶鱼精
+
+```js
+Options.Triggers.push({
+  zoneId: ZoneId.MatchAll,
+  triggers: [
+    {
+      id: "PostNamazu Callback Test",
+      netRegex: NetRegexes.gameNameLog({ line: "test", capture: false }),
+      run: () => {
+          
+        // command 文本指令
+        callOverlayHandler({ call: "PostNamazu", c: "command", p: "/e 123" });
+
+        // place 本地标点
+        callOverlayHandler({
+            call: "PostNamazu",
+            c: "place",
+            p: JSON.stringify({ A: { Active: false }, B: { X: -63.199, Y: 18.0, Z: -3.915, Active: true } }),
+        });
+
+        // mark 标记
+        callOverlayHandler({
+           call: "PostNamazu",
+           c: "mark",
+           p: JSON.stringify({ ActorID: 0xe000000, Name: "王小明", MarkType: "attack2", LocalOnly: false }),
+         });
+
+        // preset 写入预设标点
+        callOverlayHandler({
+           call: "PostNamazu",
+           c: "preset",
+           p: JSON.stringify({
+             Name: "Slot5",
+             MapID: 676,
+             A: { X: -170.684, Y: -0.204, Z: 464.994, Active: true },
+             C: { X: -171.698, Y: 0.022, Z: 470.941, Active: true },
+           }),
+        });
+
+        // queue 队列执行指令
+        callOverlayHandler({
+           call: "PostNamazu",
+           c: "queue",
+           p: JSON.stringify([
+             { c: "qid", p: "test" },
+             { c: "command", p: "/e 111" },
+             { c: "command", p: "/e 222", d: 1000 },
+             { c: "stop", p: "test", d: 1000 },
+             { c: "command", p: "/e 333", d: 1000 },
+           ]),
+        });
+      },
+      alarmText: "发送指令",
+    },
+  ],
+});
+```
+
+
+
+### splatoon
+
+把下面代码放在文件开头
+
+```js
+const portOfSplatoon = 47774;
+function Splatoon(namespace, time, data) {
+  fetch(`http://127.0.0.1:${portOfSplatoon}/?namespace=${namespace}&destroyAt=${time}`, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: data
+  });
+}
+```
+
+
+
+使用例子
+
+```js
+run: () => {
+    let namespace = '投盾男';
+    let time = '15000';
+    let json = `{
+          "Name": "二运M位置",
+          "type": 1,
+          "radius": 3.0,
+          "color": 4278190335,
+          "overlayBGColor": 3355443200,
+          "overlayTextColor": 4290903808,
+          "overlayVOffset": 2.0,
+          "overlayFScale": 3.0,
+          "thicc": 5.0,
+          "refActorDataID": 15714,
+          "refActorPlaceholder": [],
+          "refActorComparisonAnd": true,
+          "FillStep": 0.1,
+          "refActorComparisonType": 7,
+          "onlyVisible": true,
+          "tether": true,
+          "DistanceSourceX": 100.11486,
+          "DistanceSourceY": 88.17513,
+          "DistanceSourceZ": -5.456968E-12,
+          "DistanceMax": 5.0,
+          "refActorVFXPath": "vfx/common/eff/mon_eisyo03t.avfx",
+          "refActorVFXMax": 999000
+    }`;
+    Splatoon(namespace, time, json);
+},
+```
+
+
+
+### FFD
+
+把下面代码放在文件开头
+
+```js
+const FFD = {
+  颜色 : 'enemy',
+  Send: (json) => {
+    fetch(`http://127.0.0.1:8001/rpc`, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(json)
+    });
+  },
+  PosTranslation: (x, y, z, angle, distance) => {
+    // 点平移函数
+    // x,y为原始pos
+    // angle为平移弧度（南为0，北为3.14，顺时针为负，逆时针为正）
+    // distance为平移距离
+    // 返回最终点的[x,z,y]
+    if (typeof (x) != Number) x = Number(x)
+    if (typeof (y) != Number) y = Number(y)
+    if (typeof (z) != Number) z = Number(z)
+    if (typeof (angle) != Number) angle = Number(angle)
+    if (typeof (distance) != Number) distance = Number(distance)
+    let a = distance * Math.sin(angle);
+    let b = distance * Math.cos(angle);
+    return [x + a, z, y + b]
+  },
+  GetAng: (heading, where) => {
+    //用于获取以单位面向为标准的方向弧度（南为0，北为3.14，顺时针为负，逆时针为正）
+    //heading为当前面向弧度
+    //where为方位，填“下”“左”“右”
+    if (typeof (heading) != Number) heading = Number(heading)
+    let a = (heading >= 0) ? -Math.PI / 2 : Math.PI / 2;
+    let b = (heading >= 0) ? -Math.PI : Math.PI;
+    if (where == "下") return heading + b
+    if (where == "左") return heading + a
+    if (where == "右") return heading - a
+  },
+  Rad_Ang: (x, how) => {
+    //角度弧度转换函数
+    //how不填默认弧度转角度，填1角度转弧度
+    if (typeof (x) != Number) x = Number(x)
+    if (how == undefined) {
+      x = x * 180.0 / Math.PI
+    } else {
+      x = x * Math.PI / 180.0;
+    }
+    return x
+  },
+  send_feetfighter: (data, width, _width, length1, length2, duration) => {
+    //发送辣翅画图
+    //data为实体对象
+    //总宽度，中间留空宽度，向前长度，向后长度
+    let len = (width + _width) / 4;
+
+    let angle = FFD.GetAng(data.Heading, '左');
+    let temp = FFD.PosTranslation(data.PosX, data.PosY, data.PosZ, angle, len);
+    angle = FFD.GetAng(data.Heading, '下');
+    temp = FFD.PosTranslation(temp[0], temp[2], data.PosZ, angle, length2);
+
+    let angle2 = FFD.GetAng(data.Heading, '右');
+    let temp2 = FFD.PosTranslation(data.PosX, data.PosY, data.PosZ, angle2, len);
+    angle2 = FFD.GetAng(data.Heading, '下');
+    temp2 = FFD.PosTranslation(temp2[0], temp2[2], data.PosZ, angle2, length2);
+
+    let 辣翅1 = {
+      cmd: 'add_omen',
+      color: FFD.颜色,
+      shape_scale: {
+        key: "rect",
+        range: length1 + length2,
+        width: (width - _width) / 2,
+      },
+      pos: temp,
+      facing: data.Heading,
+      'duration': duration,
+    };
+    let 辣翅2 = {
+      cmd: 'add_omen',
+      color: FFD.颜色,
+      shape_scale: {
+        key: "rect",
+        range: length1 + length2,
+        width: (width - _width) / 2,
+      },
+      pos: temp2,
+      facing: data.Heading,
+      'duration': duration,
+    };
+
+    FFD.Send(辣翅1);
+    FFD.Send(辣翅2);
+  }
+};
+```
+
+
+
+使用例子：
+
+```js
+{
+    id: 'P2 一运画图眼睛激光',
+    type: 'ability',
+    netRegex: NetRegexes.ability({
+        id: '7B3E',
+    }),
+    delaySeconds: 10,
+    run: () => {
+        let json = {
+            cmd: 'foreach',
+            name: 'target_id',
+            values: { key: 'actors_by_base_id', id: 15716 },
+            func: {
+                cmd: 'add_omen',
+                color: 'nomal',
+                shape_scale: {
+                    key: 'rect',
+                    range: 65,
+                    width: 16,
+                },
+                pos: {
+                    key: 'actor_pos',
+                    id: { key: 'arg', name: 'target_id' },
+                },
+                facing: {
+                    key: 'actor_facing',
+                    id: { key: 'arg', name: 'target_id' },
+                },
+                duration: 10,
+            },
+        };
+        let json2 = {
+            cmd: 'foreach',
+            name: 'target_id',
+            values: { key: 'actors_by_base_id', id: 15716 },
+            func: {
+                cmd: 'add_omen',
+                color: 'hard',
+                shape_scale: {
+                    key: 'rect',
+                    range: 35,
+                    width: 16,
+                },
+                pos: {
+                    key: 'actor_pos',
+                    id: { key: 'arg', name: 'target_id' },
+                },
+                facing: {
+                    key: 'actor_facing',
+                    id: { key: 'arg', name: 'target_id' },
+                },
+                duration: 10,
+            },
+        };
+        FFD.Send(json);
+        FFD.Send(json2);
+    },
+},
+```
+
+辣翅例子：
+
+```js
+FFD.send_feetfighter(data.欧米茄F, 50, 8, 40, 20, 5);
+```
+
+
+
+## 调试
+
+启动OverlayPlugin的WSS服务器，地址127.0.0.1，端口10501
+
+浏览器打开下面这个网页
+
+https://quisquous.github.io/cactbot/ui/raidboss/raidemulator.html?OVERLAY_WS=ws://127.0.0.1:10501/ws
+
+
+
+然后就可以调试了，这玩意还挺好用的，打本模拟器。data数据可以直接点进某个触发器里看当前的值是多少，注意模拟器只能收集log日志包含的信息，一些比如callOverlayHandler回调来的数据是没有的。
+
+
+
+如果你console.log了一些内容，浏览器摁F12就可以看到，F12也可以用来检查一些语法错误等
+
+
+
+非调试模拟器时的console.log（比如做了/e test的测试触发器）在“触发器提示”的悬浮窗当中的“DevTools”中查看
 
