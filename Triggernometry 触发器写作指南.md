@@ -72,7 +72,7 @@ v1.2.7.113 版本更新 OverlayPlugin 的实体解析模块后，触发器将可
  
 - **OwnerID** : `uint` (HEX8)
 
-  召唤物主人的 **ID**，包括召唤兽、炮塔、分身、弗雷、铃兰、地星等，仅对召唤物有效。
+  召唤物主人的 **ID**，仅对召唤物有效。召唤物包括召唤兽、炮塔、分身、弗雷、铃兰、地星等。
  
 - **Type** : `byte`
 - **TypeName** : `string`
@@ -85,14 +85,14 @@ v1.2.7.113 版本更新 OverlayPlugin 的实体解析模块后，触发器将可
   | :------: | :----------: | :-----------: | :-----------: | :------ |
   | 0 | Unknown | -- | -- | -- |
   | 1 | Pc | **✓** | **✓** | 玩家 |
-  | 2 | BattleNpc | **✓** | 仅部分 | 绝大多数战斗相关的非玩家实体，如怪物、Boss、场上实体、亲信战友等。关于如何区分是否为敌方，详见下文 `IsEnemy` |
+  | 2 | BattleNpc | **✓** | 仅部分 | 绝大多数战斗相关的非玩家实体，如怪物、Boss、场上实体、召唤物、陆行鸟、亲信战友等。关于如何区分是否为敌方，详见下文 `IsEnemy` |
   | 3 | EventNpc | **✓** |  | 场景中的实体，如住宅区的雇员、无人岛的野生动物、鸟棚里的鸟等 |
   | 4 | Treasure | **✓** |  | 宝箱，如副本战利品、深宫宝箱、寻宝宝箱 |
   | 5 | Aetheryte |  |  | 以太之光 |
   | 6 | GatheringPoint | **✓** |  | 野外的采集点（不含无人岛） |
-  | 7 | EventObj | **✓** |  | **???????** |
+  | 7 | EventObj | **✓** |  | 某些可交互的实体 |
   | 8 | Mount |  |  | 坐骑 |
-  | 9 | Companion |  |  | 宠物 陆行鸟？？|
+  | 9 | Companion |  |  | 宠物 |
   | 10 | Retainer | **✓** |  | 雇员铃召唤出的雇员 |
   | 11 | AreaObject | **✓** |  | **???????** |
   | 12 | HousingEventObject | **✓** |  | 住宅区家具、庭具 |
@@ -101,11 +101,13 @@ v1.2.7.113 版本更新 OverlayPlugin 的实体解析模块后，触发器将可
   | 15 | Ornament |  |  |  |
   | 16 | CardStand |  |  |  |
  
-- **EffectiveDistance** : `byte` （超出255的话？）
+- **Distance** / **EffectiveDistance**: `byte` 
 
-  当前玩家到这个实体目标圈的平面距离，相当于使用技能时的距离判据。
+  当前玩家到这个实体**目标圈**的平面距离，相当于使用技能时的距离判据。
 
   对于大多数实体，大致相当于平面距离减去目标半径。
+
+  队友、S 怪等实体会永远存在于实体列表中，若距离超过 250 则会固定为 250。
  
 - **Status** : `byte`
 
@@ -115,107 +117,118 @@ v1.2.7.113 版本更新 OverlayPlugin 的实体解析模块后，触发器将可
 - **PosY** / **Y** : `float`
 - **PosZ** / **Z** : `float`
   
- 
+  游戏内坐标系下，实体所处中心的三维坐标。
+
+  该坐标系的 `X` 正方向朝东、`Y` 正方向朝南、`Z` 正方向朝上（高度）。
+
+  > **补充说明：**
+  > 
+  > 注意这个定义和内存及网络包中的顺序不一样，该顺序实际是 X Z Y。   
+  > FFXIV 解析插件将 YZ 定义颠倒，以匹配数学上的正常习惯，即 XOY 为水平面。  
+  > 后续 ACT 插件基本也都仿照此定义修改了顺序（鲶鱼精邮差除外）。  
+  > 然而这也带来了一些问题，无论平面还是三维坐标系都变成了左手系，部分涉及到角度的数学函数可能与正常定义下有所出入。  
+
+  注意该坐标系在游戏内不可见。实际坐标与小地图显示的坐标不同，比例尺一般为 1:50（未经验证），且原点位置也不相同。
+
+- **PosXY** / **XY**
+- **Pos** / **XYZ**
+  
+  坐标数据的拼接，用于简化表达式。
+  
+  一次性输出完整的 XY 或 XYZ 坐标，以 `, ` 分隔，如 `100, 100` 或 `100, 100, 0`。
+  
+  此外，每次通过表达式查询实体时，实际上都遍历搜索了一次实体，这可以在获取完整坐标时减少搜索次数。
+
 - **Heading** / **H** : `float`
 
-  实体的面向。【游戏坐标系】
+  游戏内坐标系下实体的面向。
+  
+  以弧度表示：正北 ±π，沿俯视视角逆时针增加，如正西 = -π/2，正南 = 0，正东 = π/2。
+  
+  【图】
  
 - **Radius** : `float`
 
-  实体的半径。
+  实体的半径，通常可以认为是目标圈的半径。
 
 ### 战斗实体数据
- 
+  
+  以下数据只有玩家、BattleNpc、EventNpc、Retainer 四种类型（详见上文 Type）才具备有效的值。
+  
+  其他类型实体会固定为默认值：数值类型为 0，字符串为空。
+
+ （补充）
+
 - **ModelStatus** 
 
  
-- **CurrentHP** 
+- **CurrentHP** **MaxHP** : `int` （疑似应为 `uint`）
+- **CurrentMP** **MaxMP** : `int` （疑似应为 `uint`）
+- **CurrentCP** **MaxCP** : `ushort`
+- **CurrentGP** **MaxGP** : `ushort`
+ 
+  实体的当前 / 最大生命、魔力、制作力、采集力。
+
+- **TransformationId** : `short`
 
  
-- **MaxHP** 
+- **JobID** : `byte`
+
+  实体的职业 ID。（链接：职业）
 
  
-- **CurrentMP** 
+- **Level** : `byte`
+  
+  实体的等级。
+ 
+- **MonsterType** : `byte`
+- **IsEnemy** : `bool`
 
  
-- **MaxMP** 
+- **IsAggressive** : `bool`
+- **InCombat** : `bool`
 
  
-- **CurrentGP** 
+- **InParty** : `bool`
+- **InAlliance** : `bool`
+- **IsFriend** : `bool`
 
  
-- **MaxGP** 
+- **WeaponId** : `byte`
 
  
-- **CurrentCP** 
+- **TargetID** : `uint` (HEX8)
 
  
-- **MaxCP** 
+- **BNpcNameID** : `uint`
 
  
-- **TransformationId** 
+- **CurrentWorldID** : `ushort`
 
  
-- **Job** 
+- **WorldID** : `ushort`
 
  
-- **Level** 
+- **IsCasting** : `bool`
 
  
-- **MonsterType** 
+- **CastType** : `byte`
 
  
-- **AggressionStatus** 
+- **CastBuffID** : `uint` (HEX)
 
  
-- **PartyType** 
+- **CastTargetID** : `uint` (HEX8)
 
  
-- **WeaponId** 
+- **CastGroundTargetX** : `float`
+- **CastGroundTargetY** : `float`
+- **CastGroundTargetZ** : `float`
 
  
-- **PCTargetID** 
+- **CastDurationCurrent** : `float`
+- **CastDurationMax** : `float`
 
  
-- **NPCTargetID** 
-
- 
-- **BNpcNameID** 
-
- 
-- **CurrentWorldID** 
-
- 
-- **WorldID** 
-
  
 - **Effects** 
-
- 
-- **IsCasting1** 
-
- 
-- **IsCasting2** 
-
- 
-- **CastBuffID** 
-
- 
-- **CastTargetID** 
-
- 
-- **CastGroundTargetX** 
-
- 
-- **CastGroundTargetY** 
-
- 
-- **CastGroundTargetZ** 
-
- 
-- **CastDurationCurrent** 
-
- 
-- **CastDurationMax** 
-
- 
