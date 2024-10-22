@@ -4,17 +4,18 @@
 # 日志与触发器
 
 本文为日志行的综合指南。  
+整体结构翻译自 [LogGuide.md](https://github.com/OverlayPlugin/cactbot/edit/main/docs/LogGuide.md)，在此基础上增加了一些相关的补充内容。  
 本文受众为在 ACT 中编写 FF14 触发器的开发者。  
 
 译者注：为方便初学者理解，本文会适当附上 Cactbot 和 Triggernometry 中使用相关内容的案例。  
 
 最近更新适配：
-- 2024.5.16
-- [FF14](https://na.finalfantasyxiv.com/lodestone/special/patchnote_log/) Patch 6.58
-- [FFXIV Plugin](https://github.com/ravahn/FFXIV_ACT_Plugin/releases) Patch 2.7.0.1
-- [OverlayPlugin](https://github.com/OverlayPlugin/OverlayPlugin/releases) Patch 0.19.28
-- [Cactbot](https://github.com/OverlayPlugin/cactbot) Patch 0.31.4
-- [Triggernometry](https://github.com/paissaheavyindustries/Triggernometry) Patch 1.2.0.1
+- 2024.10.21
+- [FF14](https://na.finalfantasyxiv.com/lodestone/special/patchnote_log/) Patch 7.05
+- [FFXIV Plugin](https://github.com/ravahn/FFXIV_ACT_Plugin/releases) v2.7.1.9
+- [OverlayPlugin](https://github.com/OverlayPlugin/OverlayPlugin/releases) v0.19.38
+- [Cactbot](https://github.com/OverlayPlugin/cactbot/releases) v0.32.12
+- [Triggernometry](https://github.com/paissaheavyindustries/Triggernometry) v1.2.0.7 / pre-1.2.0.712
 
 ## 目录
 
