@@ -149,12 +149,12 @@
 
 剩余行中，每行的格式应为：`某参数名: 某参数值`，如前文中的例子：
 
-    ```python
-    action:   circle
-    center:   100, 100, 0
-    r:        10√2
-    waymarks: A4D3C2B1
-    ```
+```python
+action:   circle
+center:   100, 100, 0
+r:        10√2
+waymarks: A4D3C2B1
+```
 
 根据不同标点模式，程序会预期一系列不同的参数名，详见下文。
 
