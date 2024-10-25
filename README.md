@@ -12,7 +12,7 @@
 
 ---
 
-### [ACT 日志行介绍](https://github.com/MnFeN/ACT_Tech_Guide/blob/main/7.0%20ACT%20%E6%97%A5%E5%BF%97%E6%8C%87%E5%8D%97.md)
+### [ACT 日志行介绍](7.0%20ACT%20%E6%97%A5%E5%BF%97%E6%8C%87%E5%8D%97.md)
 
 包含两部分：
 
@@ -22,7 +22,7 @@
 
 ---
 
-### [Triggernometry 高级触发器](https://github.com/MnFeN/ACT_Tech_Guide/tree/main/Triggernometry%20%E8%A7%A6%E5%8F%91%E5%99%A8%E5%86%99%E4%BD%9C%E6%8C%87%E5%8D%97)
+### [Triggernometry 高级触发器](Triggernometry%20触发器写作指南)
 
 从入门到进阶的使用说明。
 
@@ -30,7 +30,7 @@
 
 ---
 
-### [高级标点工具箱](https://github.com/MnFeN/ACT_Tech_Guide/blob/main/%E9%AB%98%E7%BA%A7%E6%A0%87%E7%82%B9%E5%B7%A5%E5%85%B7%E7%AE%B1%20AdvWm%20%E4%BD%BF%E7%94%A8%E7%AE%80%E4%BB%8B.md)
+### [高级标点工具箱](高级标点工具箱%20AdvWm)
 
-笔者开发的一段用于触发器的 C# 脚本，与鲶鱼精邮差交互，可显著简化调用场地标点。
+笔者开发的触发器 C# 脚本，可注册到触发器程序中，与鲶鱼精邮差交互，显著简化调用场地标点。
 
