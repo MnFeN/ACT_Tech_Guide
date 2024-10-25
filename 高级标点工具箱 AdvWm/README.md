@@ -58,9 +58,9 @@
 
     ```python
     action:   circle
-    center:   100, 100, 0
-    r:        10√2
     waymarks: A4D3C2B1
+    O: 100, 100, 0
+    r: 10√2
     ```
     
 由此可以明显看出二者的差异。
