@@ -6,8 +6,10 @@
 
 - FF14
 - 与 FF14 版本匹配的 Advanced Combat Tracker （ACT）
-- Triggernometry 高级触发器
+- [Triggernometry 高级触发器](https://github.com/MnFeN/Triggernometry)
 - [PostNamazu 鲶鱼精邮差](https://github.com/Natsukage/PostNamazu)
+
+本文档基于触发器 v1.2.0.713、高级标点工具箱 v4.3，旧版本会有部分功能无法使用。
 
 ## 简介
 
@@ -65,7 +67,6 @@
     
 由此可以明显看出二者的差异。
 
-用户仅需接近自然语言的输入，无需手动输入 JSON 字符串，也无需在 Triggernometry 或 cactbot 等脚本代码中构建标点数据结构并序列化。
+用户无需手动输入 JSON 字符串，也无需在 Triggernometry 或 cactbot 等脚本代码中构建标点数据结构并序列化，仅需输入一串格式很宽松的参数即可轻松标点。
 
-其代价仅是额外的一点字符串处理和数学计算，对于现代计算机的性能而言微不足道。
-
+请参考文件夹下的其他文档查看详细介绍。
