@@ -36,7 +36,7 @@
 
     ```python
     1: 100, 100, 0
-    2: clear
+    2: Clear
     ```
 
 - 例 2：场地八方标点，半径约 `10√2` = `14.14`
@@ -59,10 +59,10 @@
   - 高级标点工具箱文本指令：
 
     ```python
-    action:   circle
-    waymarks: A4D3C2B1
+    Action:   Circle
+    Waymarks: A4D3C2B1
     O: 100, 100, 0
-    r: 10√2
+    R: 10√2
     ```
     
 由此可以明显看出二者的差异。
