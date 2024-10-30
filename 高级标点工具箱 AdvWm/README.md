@@ -45,14 +45,14 @@
 
     ```json
     {
-      "A":   {"X": 100, "Z": 85.86,  "Y": 0, "Active": true},  
-      "B":   {"X": 114.14, "Z": 100, "Y": 0, "Active": true},  
-      "C":   {"X": 100, "Z": 114.14, "Y": 0, "Active": true},   
-      "D":   {"X": 85.86,  "Z": 100, "Y": 0, "Active": true},   
-      "One":    {"X": 110, "Z": 90,  "Y": 0, "Active": true},   
-      "Two":    {"X": 110, "Z": 110, "Y": 0, "Active": true},   
-      "Three":  {"X": 90,  "Z": 110, "Y": 0, "Active": true},  
-      "Four":   {"X": 90,  "Z": 90,  "Y": 0, "Active": true}
+        "A":     {"X": 100,   "Z": 85.86, "Y": 0, "Active": true},
+        "B":     {"X": 114.14,"Z": 100,   "Y": 0, "Active": true},
+        "C":     {"X": 100,   "Z": 114.14,"Y": 0, "Active": true},
+        "D":     {"X": 85.86, "Z": 100,   "Y": 0, "Active": true},
+        "One":   {"X": 110,   "Z": 90,    "Y": 0, "Active": true},
+        "Two":   {"X": 110,   "Z": 110,   "Y": 0, "Active": true},
+        "Three": {"X": 90,    "Z": 110,   "Y": 0, "Active": true},
+        "Four":  {"X": 90,    "Z": 90,    "Y": 0, "Active": true}
     }
     ```
 
