@@ -66,11 +66,11 @@
 
 - 在 TTS 引擎中选择系统自带引擎：
 
-  <img src="https://github.com/user-attachments/assets/db9f5d94-c80d-4293-a61f-03d534e80919" height="250">
+  <img src="https://github.com/user-attachments/assets/db9f5d94-c80d-4293-a61f-03d534e80919" height="200">
 
 - 在人声选项中，将默认的 Huihui 改为你下载的 Microsoft Xiaoxiao 或 Microsoft Yunxi：
 
-  <img src="https://github.com/user-attachments/assets/3ec86805-79e1-4d1d-9ccd-db43ebd64240" height="300">
+  <img src="https://github.com/user-attachments/assets/3ec86805-79e1-4d1d-9ccd-db43ebd64240" height="350">
 
 至此已完成全部安装及配置，可以点击声音预览测试 TTS。
 
