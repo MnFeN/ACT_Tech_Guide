@@ -34,3 +34,10 @@ $`\textcolor[rgb]{0.9, 0.7, 0.25}{\textbf{如果这里的内容可以帮到你�
 
 笔者开发的触发器 C# 脚本，可注册到触发器程序中，与鲶鱼精邮差交互，显著简化调用场地标点。
 
+---
+
+### 更多资源
+
+- 如何创建自己的 ACT 插件：
+
+  [ACT 插件开发入门](https://www.lotlab.org/2022/02/06/ffxiv-act-plugin-development-introduce/)
