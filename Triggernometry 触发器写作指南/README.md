@@ -12,3 +12,7 @@
     
   - ➡️ 输出结果：  
     将处理得到的信息以不同方式输出，如 TTS 播报、发送消息、播放音频等等。
+
+附：
+
+  [Aho-Senpai 的触发器教程（英语）](https://github.com/Aho-Senpai/Aho-Triggers/tree/main)
