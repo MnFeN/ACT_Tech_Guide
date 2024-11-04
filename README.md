@@ -38,6 +38,24 @@ $`\textcolor[rgb]{0.9, 0.7, 0.25}{\textbf{如果这里的内容可以帮到你�
 
 ### 更多资源
 
-- 如何创建自己的 ACT 插件：
+- 创建自己的 ACT 插件：
 
   [ACT 插件开发入门](https://www.lotlab.org/2022/02/06/ffxiv-act-plugin-development-introduce/)
+
+- 查看解包资源：
+
+  [xivapi/SaintCoinach](https://github.com/xivapi/SaintCoinach)
+
+  其中 SaintCoinach 主要用于提取文件，Godbert 主要用于直接查看解包出的各个 csv 表。
+
+- 网络包 OpCode:
+
+  [zhyupe/ffxiv-opcode-worker](https://github.com/zhyupe/ffxiv-opcode-worker/blob/master/cn-opcodes.csv)
+
+  [karashiiro/FFXIVOpcodes](https://github.com/karashiiro/FFXIVOpcodes/blob/master/opcodes.json)
+
+- 杂项
+
+  [GeogebraRaidPlan 几何绘图战术交流板](https://www.geogebra.org/classic/xsmvduhu)
+
+  [zyzsdy/FFXIV简易版时间和天气计算库](https://gist.github.com/zyzsdy/ecf41a4cc04e2f95839a72291a207347)
