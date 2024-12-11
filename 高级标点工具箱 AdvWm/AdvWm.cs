@@ -4,28 +4,41 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Triggernometry;
 using static System.Math;
+using Triggernometry.PluginBridges;
+using System.Windows.Forms;
 
 public struct Info
 {
     public const string Name = "AdvWm";
-    public const string FullName = "高级标点工具箱 AdvWm";
+    public const string NameCN = "高级标点工具箱";
     public const string Version = "${env:version}";
     public const string Author = "阿洛 MnFeN";
-    public static string Description = $"{FullName} v{Version} by {Author}";
+
+    public static string InitInfo => $"{Name}：{NameCN} v{Version} by {Author} 已成功初始化。";
 }
 
-RealPlugin.plug.RegisterNamedCallback("AdvWm", new Action<object, string>(AdvWm.NamedCallback), null, registrant: Info.Description);
+RealPlugin.plug.RegisterNamedCallback("AdvWm", new Action<object, string>(AdvWm.NamedCallback), null, registrant: $"{Info.NameCN} v{Info.Version}");
+RealPlugin.plug.InvokeNamedCallback("NamazuLog", Info.InitInfo);
+Interpreter.StaticHelpers.Log(RealPlugin.DebugLevelEnum.Custom, Info.InitInfo);
 
 public class AdvWm
 {
+    string _command;
     /// <summary> All keys are in lowercase. </summary>
     Dictionary<string, string> _argsDict;
     string _action = "";
     bool _log = true;
     bool _local = true;
+
+    public AdvWm(string command)
+    {
+        _command = command;
+    }
+
     public static void Log(string message) => RealPlugin.plug.InvokeNamedCallback("command", $"/e {message}");
 
     public static void NamedCallback(object _, string input)
@@ -33,8 +46,7 @@ public class AdvWm
         var commands = input.Split(new string[] { "---" }, StringSplitOptions.None);
         foreach (var command in commands)
         {
-            var advwm = new AdvWm();
-            advwm.Execute(command);
+            new AdvWm(command).Execute();
         }
     }
 
@@ -42,36 +54,48 @@ public class AdvWm
         "save", "backup", "load", "restore", "reset", "clear", "public"
     };
 
-    private void Execute(string command)
+    private void Execute()
     {
-        string simpleCmd = command.ToLower().Trim();
+        string simpleCmd = _command.ToLower().Trim();
         if (postNamazuWaymarkKeywords.Contains(simpleCmd))
         {
             RealPlugin.plug.InvokeNamedCallback("place", simpleCmd);
             return;
         }
-        
-        _argsDict = command.Split('\n')
+
+        _argsDict = _command.Split('\n')
             .Where(line => line.Contains(":") && !line.StartsWith("//"))
             .ToDictionary(
                 line => line.Substring(0, line.IndexOf(':')).Trim().ToLower(),
                 line => line.Substring(line.IndexOf(':') + 1).Trim()
             );
+
         // 解析共通参数
         TryGetArg("Action", out _action);
         _log = !TryGetArg("Log", out string log) || bool.Parse(log.ToLower());
         _local = !TryGetArg("Local", "LocalOnly", out string local) || bool.Parse(local.ToLower());
 
         Waymarks waymarks;
-        switch (_action.ToLower())
+        switch (_action?.ToLower() ?? "")
         {
             case "getversion":
-                Interpreter.StaticHelpers.SetScalarVariable(isPersistent: false, $"{Info.Name}_version", Info.Version);
-                return;
-            case "initmessage":
-                Log($"已加载：{Info.Description}");
-                return;
-            case "polar": // 不推荐使用，仅为兼容旧版本
+                Interpreter.StaticHelpers.SetScalarVariable(isPersistent: false, $"{Info.Name}_version", Info.Version); return;
+            case "encode":
+                WaymarksEncoder.EncodeAndSendWaymarks(GetArg("data"), false); return;
+            case "encodeanonymous":
+                WaymarksEncoder.EncodeAndSendWaymarks(GetArg("data"), true); return;
+            case "decode":
+                string sender = GetArg("sender");
+                WaymarksEncoder.DecodeFromWaymarksAndShow(); return;
+            case "ask":
+                WaymarksEncoder.Ask(false); return;
+            case "askanonymous":
+                WaymarksEncoder.Ask(true); return;
+            case "answer":
+                WaymarksEncoder.Answer(); return;
+            case "getusers":
+                WaymarksEncoder.GetUsersResult(); return;
+            case "polar": // 不推荐使用，仅为兼容旧版本，可被 default 模式完全替代
                 waymarks = ParseWaymarksPolar(); break;
             case "circle":
                 waymarks = ParseWaymarksCircle(); break;
@@ -97,12 +121,7 @@ public class AdvWm
         waymarks.Mark();
     }
 
-    /// <summary>
-    /// 提供所有坐标进行标点的模式：<br />
-    /// 将相对坐标 x y z 根据给定的中心、伸缩尺度、旋转角度线性变换
-    /// 先伸缩，再旋转，最后平移到中心。
-    /// </summary>
-    /// <returns>经过所有变换后的一组标点。</returns>
+    /// <summary> 根据提供的所有坐标，生成一组初始标点。 </summary>
     private Waymarks ParseWaymarksDefault()
     {
         Waymarks waymarks = new Waymarks();
@@ -116,10 +135,7 @@ public class AdvWm
         return waymarks;
     }
 
-    /// <summary>
-    /// 极坐标（柱坐标）模式：<br />
-    /// 将 r θ z 伸缩旋转后，转换为 x y z 并平移至给定的中心。
-    /// </summary>
+    /// <summary> 根据提供的所有极坐标，生成一组初始标点。建议使用 Default 替代。 </summary>
     private Waymarks ParseWaymarksPolar()
     {
         Waymarks waymarks = new Waymarks();
@@ -134,6 +150,7 @@ public class AdvWm
         return waymarks;
     }
 
+    /// <summary> 根据提供的半径和标点名，生成一组排列成圆周的初始标点。 </summary>
     private Waymarks ParseWaymarksCircle()
     {
         Waymarks waymarks = new Waymarks();
@@ -155,6 +172,7 @@ public class AdvWm
         return waymarks;
     }
 
+    /// <summary> 根据提供的半径、标点名、圆心角，生成一组排列成弧线的初始标点。 </summary>
     private Waymarks ParseWaymarksArc()
     {
         Waymarks waymarks = new Waymarks();
@@ -178,6 +196,7 @@ public class AdvWm
         return waymarks;
     }
 
+    /// <summary> 根据提供的起点、终点、标点名，生成线性插值的初始标点。 </summary>
     private Waymarks ParseWaymarksLinearConnect()
     {
         Waymarks waymarks = new Waymarks();
@@ -205,8 +224,7 @@ public class AdvWm
                         string strTotalDistance = totalDistance.ToString(MathParser.CultureInfo);
                         rawDistance = rawDistance.Replace("@d", strTotalDistance);
                         double distance = MathParser.Parse(rawDistance.Substring(0, rawDistance.Length - 2));
-                        // 如果起点终点过近导致给定距离超过总长度，则采用默认距离
-                        percentage = distance > totalDistance ? percentage : distance / totalDistance;
+                        percentage = distance / totalDistance;
                     }
                     else                                // 以 A: 0.125 形式提供的百分比
                     {
@@ -227,7 +245,7 @@ public class AdvWm
     private void TryApplyScales(Waymarks waymarks)
     {
         // 首先尝试解析 Scale 和具体的 ScaleX, ScaleY, ScaleZ 参数
-        bool hasScale  = TryGetArg("Scale",  out string rawScale);
+        bool hasScale = TryGetArg("Scale", out string rawScale);
         bool hasScaleX = TryGetArg("ScaleX", out string rawScaleX);
         bool hasScaleY = TryGetArg("ScaleY", out string rawScaleY);
         bool hasScaleZ = TryGetArg("ScaleZ", out string rawScaleZ);
@@ -281,7 +299,7 @@ public class AdvWm
 
     string GetArg(params string[] keys)
     {
-        string key = keys.Select(k => k.ToLower()).FirstOrDefault(k => _argsDict.ContainsKey(k)) 
+        string key = keys.Select(k => k.ToLower()).FirstOrDefault(k => _argsDict.ContainsKey(k))
             ?? throw new ArgumentException($"AdvWm: 未提供指定的必需参数 {string.Join(" / ", keys)}。");
         return _argsDict[key];
     }
@@ -310,13 +328,13 @@ public abstract class XIVCoord
 
     /// <summary>
     /// 将初始坐标视为相对坐标。<br/>
-    /// 将相对坐标系的正北（θ = ±pi）在平面内旋转至给定方向 <paramref name="θ"/>。<br/><br/>
-    /// 方向角度 <paramref name="θ"/> 为游戏内标准，如：<br/>
+    /// 将相对坐标系的正北（θ = ±pi）在平面内旋转至给定方向 <paramref str="θ"/>。<br/><br/>
+    /// 方向角度 <paramref str="θ"/> 为游戏内标准，如：<br/>
     /// · 正北（不旋转）= ±pi；<br/>
     /// · 正南（旋转 180 度）= 0；<br/>
     /// · 正东（顺时针旋转 90 度）= pi/2。
     /// </summary>
-    /// <param name="theta">将初始相对坐标系的正北（-pi）旋转到的方向角度。</param>
+    /// <param str="theta">将初始相对坐标系的正北（-pi）旋转到的方向角度。</param>
     public abstract XIVCoord RotateTo(double θ);
     public abstract XIVCoord MoveTo(double dx, double dy, double dz);
     public XIVCoord MoveTo(XIVCoord center) => this + center;
@@ -357,7 +375,7 @@ public abstract class XIVCoord
         }
         else
         {
-            PolarCoord polarA = (PolarCoord)a; 
+            PolarCoord polarA = (PolarCoord)a;
             return new PolarCoord(polarA.R, polarA.θ + PI, polarA.Z);
         }
     }
@@ -383,19 +401,19 @@ public abstract class XIVCoord
 
     /// <summary>
     /// 将一串直角坐标、极坐标、或混合方式指定的坐标解析并叠加，如：<br /><br />
-    /// <paramref name="A"/>: 10, -10, 0 <br />
-    /// <paramref name="A"/>: <paramref name="polar"/> 20, -45°, 0<br />
-    /// <paramref name="A"/>: 10, -10, 0 <paramref name="polar"/> 20, -45°（在直角坐标基础上叠加极坐标结果）<br /><br />
-    /// 字符串格式详见 <paramref name="rawCoords"/>。
+    /// <paramref str="A"/>: 10, -10, 0 <br />
+    /// <paramref str="A"/>: <paramref str="polar"/> 20, -45°, 0<br />
+    /// <paramref str="A"/>: 10, -10, 0 <paramref str="polar"/> 20, -45°（在直角坐标基础上叠加极坐标结果）<br /><br />
+    /// 字符串格式详见 <paramref str="rawCoords"/>。
     /// </summary>
-    /// <param name="rawCoords">
+    /// <param str="rawCoords">
     /// 一串坐标字符串，可包含多组坐标。<br />
     /// 每组坐标之间以关键字连接，坐标分量之间以逗号连接。如：<br /><br />
-    /// <paramref name="A"/>:     x, y, z  
-    /// <paramref name="plus"/>   x2, y2  
-    /// <paramref name="minus"/>  x3, y3, z3  
-    /// <paramref name="polar"/>  r1, θ1
-    /// <paramref name="minuspolar"/> r2, θ2, z2<br />
+    /// <paramref str="A"/>:     x, y, z  
+    /// <paramref str="plus"/>   x2, y2  
+    /// <paramref str="minus"/>  x3, y3, z3  
+    /// <paramref str="polar"/>  r1, θ1
+    /// <paramref str="minuspolar"/> r2, θ2, z2<br />
     /// </param>
     public static XIVCoord ParseRawData(string rawCoords)
     {
@@ -422,7 +440,7 @@ public abstract class XIVCoord
             currentPart += c;
         }
         parts.Add(currentPart);
-        
+
         if (depth != 0)
         {
             throw new Exception($"AdvWm: 标点参数存在 {Abs(depth)} 个未闭合的{(depth > 0 ? "左" : "右")}括号。表达式：{rawCoords}");
@@ -468,12 +486,12 @@ public abstract class XIVCoord
                 currentParams.Add(splitParts[0].Trim());
             }
             else // 偷个懒，坐标最少两个参数，而只要有两个就会被逗号预先拆分，所以正常不会出现 1 3 以外的情况
-            { 
+            {
                 throw new Exception($"AdvWm: 标点参数解析时，关键字之间参数过少。\n表达式：{rawCoords}；\n出错位置：{part}");
             }
         }
-        XIVCoord finalCoord = isCurrentPolar 
-            ? (XIVCoord)PolarCoord.Parse(currentParams.ToArray()) 
+        XIVCoord finalCoord = isCurrentPolar
+            ? (XIVCoord)PolarCoord.Parse(currentParams.ToArray())
             : (XIVCoord)CartesianCoord.Parse(currentParams.ToArray());
         coords.Add(isCurrentPlus ? finalCoord : -finalCoord);
 
@@ -555,8 +573,8 @@ public class CartesianCoord : XIVCoord
         try
         {
             return new CartesianCoord(
-                MathParser.Parse(rawX), 
-                MathParser.Parse(rawY), 
+                MathParser.Parse(rawX),
+                MathParser.Parse(rawY),
                 rawZ == null ? 0 : MathParser.Parse(rawZ));
         }
         catch (Exception ex)
@@ -590,7 +608,7 @@ public class PolarCoord : XIVCoord
     public override XIVCoord ScaleBy(double scaleX, double scaleY, double scaleZ)
     {
         if (Abs(scaleX - scaleY) < 1e-5 && scaleX >= 1e-4)
-        { 
+        {
             R *= scaleX;
             Z *= scaleZ;
             return this;
@@ -631,8 +649,8 @@ public class PolarCoord : XIVCoord
         try
         {
             return new PolarCoord(
-                MathParser.Parse(rawR), 
-                MathParser.Parse(rawθ), 
+                MathParser.Parse(rawR),
+                MathParser.Parse(rawθ),
                 rawZ == null ? 0 : MathParser.Parse(rawZ));
         }
         catch (Exception ex)
@@ -776,9 +794,9 @@ public sealed class Waymarks : IEnumerable<Waymark>
     {
         var jsonList = _waymarks.Values.Where(wm => wm?.Ignore == false)
             .Select(wm => "    " + wm.Jsonify()).ToList();
-        if (!Log) 
+        if (!Log)
             jsonList.Add($"    \"Log\": false");
-        if (!LocalOnly) 
+        if (!LocalOnly)
             jsonList.Add($"    \"LocalOnly\": false");
         string data = string.Join(",\n", jsonList);
         return $"{{\n{string.Join(",\n", jsonList)}\n}}";
@@ -793,3 +811,216 @@ public sealed class Waymarks : IEnumerable<Waymark>
 }
 
 #endregion Waymark(s)
+
+public static class WaymarksEncoder
+{
+    static bool IsSelfAnonymous => Interpreter.StaticHelpers.GetScalarVariable(true, "AdvWm_Anonymous") != null;
+
+    private static int CoordToInt(float coord)
+    {
+        // 标点数据只有三位精度。
+        // float 在 ±16384 内时可保证第三位小数准确，小于这个阈值的最大 2^n / 1000 为 ±8388.608，恰好 24 bit
+        int encodedInt = (int)Round((double)coord * 1000);
+        if (encodedInt < 0)            // -8388608 ~ -1
+            encodedInt += 0xFFFFFF;    // 转换为 8388608 (0x800000) ~ 16777215 (0xFFFFFF)
+        return encodedInt;
+    }
+
+    static float IntToCoord(int encodedInt) => (encodedInt > 0x7FFFFF ? encodedInt - 0xFFFFFF : encodedInt) / 1000f;
+
+    /// <summary> 通过 6 字节 int 解码 10XXXXXX ID </summary>
+    static uint? CoordToId(float coord) => coord == 0 ? null : (uint?)(CoordToInt(coord) + 0x10000000);
+
+    /// <summary> 将 id 编码为两个 3 字节精度的坐标：80.00 - 120.95 </summary>
+    static (float, float) IdToCoords(uint id)
+    {
+        id -= 0x10000000;
+        return (80 + ((id >> 12) & 0xFFF) / 100f, 80 + (id & 0xFFF) / 100f);
+    }
+
+
+    /// <summary> 解码当前标点为文本，并检测发送者 </summary>
+    public static void DecodeFromWaymarksAndShow()
+    {
+        List<byte> byteList = new List<byte>();
+        var waymarks = Triggernometry.Utilities.Memory.Waymarks.Read();
+        uint? senderId = CoordToId(waymarks.A.Z);
+        string senderDesc = "Someone";
+        if (senderId != null)
+        {
+            var sender = BridgeFFXIV.GetIdEntity(senderId.Value.ToString("X"));
+            senderDesc = $"{sender.GetValue("name")} ({sender.GetValue("jobEN3")})";
+        }
+        foreach (var waymark in waymarks.Skip(1)) // 跳过用于表明密语消息的 A 点
+        {
+            if (!waymark.Active) break;
+            foreach (var coord in new[] { waymark.X, waymark.Y, waymark.Z })
+            {
+                int encodedInt = CoordToInt(coord);
+                // 从而将 ±8388.608 以内的 float 转换为 24 bit 数据，再分解为 3 字节
+                byteList.Add((byte)((encodedInt >> 16) & 0xFF));   // 高8位
+                byteList.Add((byte)((encodedInt >> 8) & 0xFF));    // 中8位
+                byteList.Add((byte)(encodedInt & 0xFF));           // 低8位
+            }
+        }
+        string msg = Encoding.UTF8.GetString(byteList.ToArray());
+        AdvWm.Log($"[AdvWm] Secret Message:\n{senderDesc} says:\n{msg}");
+    }
+
+    /// <summary> 编码一串文本，以标点形式发送 </summary>
+    public static void EncodeAndSendWaymarks(string msg, bool anonymous)
+    {
+        bool waymarkChkEnabled = true;
+        try
+        {
+            waymarkChkEnabled = PostNamazuController.DetectAndEnableWaymarkChk();
+            byte[] byteArray = Encoding.UTF8.GetBytes(msg);
+            if (byteArray.Length > 63)
+                throw new Exception("输入字符串过长，不能超过 63 字节。");
+
+            Array.Resize(ref byteArray, 63);
+
+            List<int> integers = new List<int>();
+            for (int i = 0; i < 21; i++)
+            {
+                integers.Add((byteArray[i * 3] << 16) | (byteArray[i * 3 + 1] << 8) | (byteArray[i * 3 + 2]));
+            }
+            string advWm = $"Local: false";
+            float az = anonymous ? 0 : IntToCoord((int)(BridgeFFXIV.PlayerId - 0x10000000));
+            advWm += $"\nA: {0xFF14 / 1000f}, {0xFF14 / 1000f}, {az}";
+            string[] names = new string[] { "B", "C", "D", "1", "2", "3", "4" };
+            for (int i = 0; i < 7; i++)
+            {
+                if (integers[i * 3] == 0 && integers[i * 3 + 1] == 0 && integers[i * 3 + 2] == 0)
+                    advWm += $"\n{names[i]}: clear";
+                else
+                {
+                    float x = IntToCoord(integers[i * 3]);
+                    float y = IntToCoord(integers[i * 3 + 1]);
+                    float z = IntToCoord(integers[i * 3 + 2]);
+                    advWm += $"\n{names[i]}: {x}, {y}, {z}";
+                }
+            }
+            RealPlugin.plug.InvokeNamedCallback("AdvWm", advWm);
+        }
+        catch (Exception e) { AdvWm.Log($"发送失败：{e.Message}"); }
+        finally { PostNamazuController.ResetWaymarkChk(waymarkChkEnabled); }
+    }
+
+    public static void Ask(bool wantAnonymous)
+        => AskOrAnswerByWaymarkA(0xFF14 / 1000f * (wantAnonymous ? -1 : 1), true);
+
+    public static void Answer()
+        => AskOrAnswerByWaymarkA(0.14f, false);
+
+    /// <summary> 
+    /// 通过改变标点 A，发起关于谁在使用此工具箱的询问或应答。
+    /// x, y 各三字节精度，用于存储 ID；
+    /// z = ±0xff14 / 1000 代表发起询问（负值代表希望匿名）；±0.14 代表应答（负值代表没开启标点）。
+    /// </summary>
+    private static void AskOrAnswerByWaymarkA(float z, bool isAsk)
+    {
+        bool waymarkChkEnabled = true;
+        try
+        {
+            waymarkChkEnabled = PostNamazuController.DetectAndEnableWaymarkChk();
+            string advWm = $"Local: false";
+            (float ax, float ay) = IdToCoords(BridgeFFXIV.PlayerId);
+            if (IsSelfAnonymous) // real anonymous
+                (ax, ay) = (80, 80);
+            if (!isAsk && !waymarkChkEnabled)
+                z *= -1;
+            advWm += $"\nA: {ax}, {ay}, {z}";
+            RealPlugin.plug.InvokeNamedCallback("AdvWm", advWm);
+        }
+        catch (Exception e) { AdvWm.Log($"发送失败：{e.Message}"); }
+        finally { PostNamazuController.ResetWaymarkChk(waymarkChkEnabled); }
+    }
+
+    public static void GetUsersResult()
+    {
+        var users = Interpreter.StaticHelpers.GetListVariable(false, "AdvWm_users")?.Values?.Select(v => new UserEntry(v.ToString())).ToList();
+        if (users == null) return;
+        var ask = users?.FirstOrDefault(u => u.Asked);
+        // 查询者非自己且要求匿名时，不显示结果
+        if (ask?.Id != BridgeFFXIV.PlayerId && (ask?.WantAnonymous ?? true) && !IsSelfAnonymous) return;
+        var answers = users?.Where(u => !u.Asked).ToList();
+        string msg = $"[AdvWm] 看看誰是挂友！<se.10>\nAsked by: \n  · {ask}\nUsers:\n  · {string.Join("\n  · ", answers)}";
+        AdvWm.Log(msg);
+    }
+
+    public class UserEntry
+    {
+        public uint Id;
+        public float Z;
+        public bool Asked => Abs(Abs(Z) - 0xFF14 / 1000f) < 0.001;
+        public bool EnabledWaymark => Asked || Z > 0;
+        public bool WantAnonymous => Asked && Z < 0;
+        /// <summary> 接收如 10ABCDEF, -0.14 的输入，前面是 id，后面是标点的 z 坐标</summary>
+        public UserEntry(string data)
+        {
+            var d = data.Split(',');
+            Id = uint.Parse(d[0], System.Globalization.NumberStyles.HexNumber);
+            Z = float.Parse(d[1], System.Globalization.CultureInfo.InvariantCulture);
+        }
+        public override string ToString()
+        {
+            bool anonymous = IsSelfAnonymous ? false : WantAnonymous;
+            var entity = BridgeFFXIV.GetIdEntity(Id.ToString("X"));
+            string str = anonymous ? "" : entity.GetValue("name").ToString();
+            if (str == "")
+                str = "匿名";
+            else
+                str += $" ({entity.GetValue("jobEN3")})";
+            if (!EnabledWaymark)
+                str += " [未使用標点]";
+            return str;
+        }
+    }
+}
+
+public static class PostNamazuController
+{
+    private static CheckBox _waymarkCbx;
+    private static CheckBox WaymarkCbx => _waymarkCbx ?? GetWayMarkCbx();
+    private static TabPage TabPage => RealPlugin.InstanceHook(null, "PostNamazu.PostNamazu").TabPage;
+    private static CheckBox GetWayMarkCbx() => SearchWayMarkCbxIn(TabPage);
+    private static CheckBox SearchWayMarkCbxIn(Control parent)
+    {
+        foreach (Control ctrl in parent.Controls)
+        {
+            if (ctrl is CheckBox checkBox && checkBox.Text.ToLower() == "waymark")
+            {
+                return checkBox;
+            }
+            else if (ctrl?.HasChildren == true)
+            {
+                CheckBox foundCbx = SearchWayMarkCbxIn(ctrl);
+                if (foundCbx != null) return foundCbx;
+            }
+        }
+        return null;
+    }
+
+    public static bool DetectAndEnableWaymarkChk()
+    {
+        if (WaymarkCbx.InvokeRequired)
+        {
+            return (bool)WaymarkCbx.Invoke(new Func<bool>(DetectAndEnableWaymarkChk));
+        }
+        bool current = WaymarkCbx.Checked;
+        if (WaymarkCbx.Checked == false)
+            WaymarkCbx.Checked = true;
+        return current;
+    }
+
+    public static void ResetWaymarkChk(bool previousChecked)
+    {
+        if (WaymarkCbx.InvokeRequired)
+        {
+            WaymarkCbx.Invoke(new Action<bool>(ResetWaymarkChk), previousChecked);
+            return;
+        }
+        if (!previousChecked) WaymarkCbx.Checked = false;
+    }
+}
