@@ -33,9 +33,9 @@
     - Angle: π/2
     - Angle3D: π/2, 0, 0 （沿 z x y 轴的转向）
   - 坐标系中心：
-    - O/Center: 同 AdvWm
+    - O/Center: 同 AdvWm，未指定时默认 0, 0, 0
   - 坐标系角度：
-    - θ/Theta：同 AdvWm
+    - θ/Theta：同 AdvWm，未指定时默认 ±π
   - 是否翻转
     - +X: 1/true 或 0/false （默认 true，x 轴不翻转）
     - +Y: 同上
