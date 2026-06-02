@@ -44,7 +44,7 @@ $`\textcolor[rgb]{0.9, 0.7, 0.25}{\textbf{如果这里的内容可以帮到你�
 
 - 查看解包资源：
 
-  [xivapi/SaintCoinach](https://github.com/xivapi/SaintCoinach)
+  [ClayLivince/SaintCoinach](https://github.com/ClayLivince/SaintCoinach) （注：xivapi 主库年久失修，这是国人维护的版本）
 
   其中 SaintCoinach 主要用于提取文件，Godbert 主要用于直接查看解包出的各个 csv 表。
 
