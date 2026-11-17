@@ -1,0 +1,498 @@
+[
+  {
+    "label": "MechaStage1",
+    "vtable": "0x14241b5b0",
+    "functions": [
+      {
+        "slot": 0,
+        "address": "0x141c5f4e0",
+        "name": "sub_141C5F4E0"
+      },
+      {
+        "slot": 1,
+        "address": "0x141a6d150",
+        "name": "nullsub_2752"
+      },
+      {
+        "slot": 2,
+        "address": "0x141a6d130",
+        "name": "nullsub_2751"
+      },
+      {
+        "slot": 3,
+        "address": "0x141a6d120",
+        "name": "nullsub_2750"
+      },
+      {
+        "slot": 4,
+        "address": "0x141a6d030",
+        "name": "sub_141A6D030"
+      },
+      {
+        "slot": 5,
+        "address": "0x141a6d010",
+        "name": "sub_141A6D010"
+      },
+      {
+        "slot": 6,
+        "address": "0x141a6d0b0",
+        "name": "sub_141A6D0B0"
+      },
+      {
+        "slot": 7,
+        "address": "0x141c5f520",
+        "name": "sub_141C5F520"
+      },
+      {
+        "slot": 8,
+        "address": "0x141c5f500",
+        "name": "sub_141C5F500"
+      },
+      {
+        "slot": 9,
+        "address": "0x141a6d140",
+        "name": "sub_141A6D140"
+      }
+    ]
+  },
+  {
+    "label": "MechaStage2",
+    "vtable": "0x14241b600",
+    "functions": [
+      {
+        "slot": 0,
+        "address": "0x141c5f4e0",
+        "name": "sub_141C5F4E0"
+      },
+      {
+        "slot": 1,
+        "address": "0x141a6d150",
+        "name": "nullsub_2752"
+      },
+      {
+        "slot": 2,
+        "address": "0x141a6d130",
+        "name": "nullsub_2751"
+      },
+      {
+        "slot": 3,
+        "address": "0x141a6d120",
+        "name": "nullsub_2750"
+      },
+      {
+        "slot": 4,
+        "address": "0x141a6d060",
+        "name": "sub_141A6D060"
+      },
+      {
+        "slot": 5,
+        "address": "0x141a6d010",
+        "name": "sub_141A6D010"
+      },
+      {
+        "slot": 6,
+        "address": "0x141a6d0e0",
+        "name": "sub_141A6D0E0"
+      },
+      {
+        "slot": 7,
+        "address": "0x141c5f4f0",
+        "name": "sub_141C5F4F0"
+      },
+      {
+        "slot": 8,
+        "address": "0x141c5f500",
+        "name": "sub_141C5F500"
+      },
+      {
+        "slot": 9,
+        "address": "0x141a6d140",
+        "name": "sub_141A6D140"
+      }
+    ]
+  },
+  {
+    "label": "MechaStage3",
+    "vtable": "0x14241b650",
+    "functions": [
+      {
+        "slot": 0,
+        "address": "0x141c5f4e0",
+        "name": "sub_141C5F4E0"
+      },
+      {
+        "slot": 1,
+        "address": "0x141a6d150",
+        "name": "nullsub_2752"
+      },
+      {
+        "slot": 2,
+        "address": "0x141a6d130",
+        "name": "nullsub_2751"
+      },
+      {
+        "slot": 3,
+        "address": "0x141a6d120",
+        "name": "nullsub_2750"
+      },
+      {
+        "slot": 4,
+        "address": "0x141a6d040",
+        "name": "sub_141A6D040"
+      },
+      {
+        "slot": 5,
+        "address": "0x141a6d010",
+        "name": "sub_141A6D010"
+      },
+      {
+        "slot": 6,
+        "address": "0x141a6d0c0",
+        "name": "sub_141A6D0C0"
+      },
+      {
+        "slot": 7,
+        "address": "0x141c5f5e0",
+        "name": "sub_141C5F5E0"
+      },
+      {
+        "slot": 8,
+        "address": "0x141c5f570",
+        "name": "sub_141C5F570"
+      },
+      {
+        "slot": 9,
+        "address": "0x141a6d140",
+        "name": "sub_141A6D140"
+      }
+    ]
+  },
+  {
+    "label": "MechaStage4",
+    "vtable": "0x14241b6a0",
+    "functions": [
+      {
+        "slot": 0,
+        "address": "0x141c5f4e0",
+        "name": "sub_141C5F4E0"
+      },
+      {
+        "slot": 1,
+        "address": "0x141a6d150",
+        "name": "nullsub_2752"
+      },
+      {
+        "slot": 2,
+        "address": "0x141a6d130",
+        "name": "nullsub_2751"
+      },
+      {
+        "slot": 3,
+        "address": "0x141a6d120",
+        "name": "nullsub_2750"
+      },
+      {
+        "slot": 4,
+        "address": "0x141a6d080",
+        "name": "sub_141A6D080"
+      },
+      {
+        "slot": 5,
+        "address": "0x141a6d010",
+        "name": "sub_141A6D010"
+      },
+      {
+        "slot": 6,
+        "address": "0x141a6d100",
+        "name": "sub_141A6D100"
+      },
+      {
+        "slot": 7,
+        "address": "0x141c5f6c0",
+        "name": "sub_141C5F6C0"
+      },
+      {
+        "slot": 8,
+        "address": "0x141c5f620",
+        "name": "sub_141C5F620"
+      },
+      {
+        "slot": 9,
+        "address": "0x141a6d140",
+        "name": "sub_141A6D140"
+      }
+    ]
+  },
+  {
+    "label": "MechaStage5",
+    "vtable": "0x14241b6f0",
+    "functions": [
+      {
+        "slot": 0,
+        "address": "0x141c5f4e0",
+        "name": "sub_141C5F4E0"
+      },
+      {
+        "slot": 1,
+        "address": "0x141a6d150",
+        "name": "nullsub_2752"
+      },
+      {
+        "slot": 2,
+        "address": "0x141a6d130",
+        "name": "nullsub_2751"
+      },
+      {
+        "slot": 3,
+        "address": "0x141c5f7e0",
+        "name": "sub_141C5F7E0"
+      },
+      {
+        "slot": 4,
+        "address": "0x141a6d050",
+        "name": "sub_141A6D050"
+      },
+      {
+        "slot": 5,
+        "address": "0x141a6d010",
+        "name": "sub_141A6D010"
+      },
+      {
+        "slot": 6,
+        "address": "0x141a6d0d0",
+        "name": "sub_141A6D0D0"
+      },
+      {
+        "slot": 7,
+        "address": "0x141c5f7a0",
+        "name": "sub_141C5F7A0"
+      },
+      {
+        "slot": 8,
+        "address": "0x141c5f700",
+        "name": "sub_141C5F700"
+      },
+      {
+        "slot": 9,
+        "address": "0x141a6d140",
+        "name": "sub_141A6D140"
+      }
+    ]
+  },
+  {
+    "label": "MechaStage6",
+    "vtable": "0x14241b740",
+    "functions": [
+      {
+        "slot": 0,
+        "address": "0x141c5f4e0",
+        "name": "sub_141C5F4E0"
+      },
+      {
+        "slot": 1,
+        "address": "0x141a6d150",
+        "name": "nullsub_2752"
+      },
+      {
+        "slot": 2,
+        "address": "0x141a6d130",
+        "name": "nullsub_2751"
+      },
+      {
+        "slot": 3,
+        "address": "0x141a6d120",
+        "name": "nullsub_2750"
+      },
+      {
+        "slot": 4,
+        "address": "0x141a6d020",
+        "name": "sub_141A6D020"
+      },
+      {
+        "slot": 5,
+        "address": "0x141a6d010",
+        "name": "sub_141A6D010"
+      },
+      {
+        "slot": 6,
+        "address": "0x141a6d0a0",
+        "name": "sub_141A6D0A0"
+      },
+      {
+        "slot": 7,
+        "address": "0x141c5f4f0",
+        "name": "sub_141C5F4F0"
+      },
+      {
+        "slot": 8,
+        "address": "0x141c5f500",
+        "name": "sub_141C5F500"
+      },
+      {
+        "slot": 9,
+        "address": "0x141a6d140",
+        "name": "sub_141A6D140"
+      }
+    ]
+  },
+  {
+    "label": "MechaStage7",
+    "vtable": "0x14241b790",
+    "functions": [
+      {
+        "slot": 0,
+        "address": "0x141c5f4e0",
+        "name": "sub_141C5F4E0"
+      },
+      {
+        "slot": 1,
+        "address": "0x141a6d150",
+        "name": "nullsub_2752"
+      },
+      {
+        "slot": 2,
+        "address": "0x141a6d130",
+        "name": "nullsub_2751"
+      },
+      {
+        "slot": 3,
+        "address": "0x141a6d120",
+        "name": "nullsub_2750"
+      },
+      {
+        "slot": 4,
+        "address": "0x141a6d070",
+        "name": "sub_141A6D070"
+      },
+      {
+        "slot": 5,
+        "address": "0x141a6d010",
+        "name": "sub_141A6D010"
+      },
+      {
+        "slot": 6,
+        "address": "0x141a6d0f0",
+        "name": "sub_141A6D0F0"
+      },
+      {
+        "slot": 7,
+        "address": "0x141c5f990",
+        "name": "sub_141C5F990"
+      },
+      {
+        "slot": 8,
+        "address": "0x141c5f8e0",
+        "name": "sub_141C5F8E0"
+      },
+      {
+        "slot": 9,
+        "address": "0x141a6d140",
+        "name": "sub_141A6D140"
+      }
+    ]
+  },
+  {
+    "label": "WKS_1118",
+    "vtable": "0x14241bed0",
+    "functions": [
+      {
+        "slot": 0,
+        "address": "0x141a77640",
+        "name": "sub_141A77640"
+      },
+      {
+        "slot": 1,
+        "address": "0x141a762b0",
+        "name": "sub_141A762B0"
+      },
+      {
+        "slot": 2,
+        "address": "0x141a76490",
+        "name": "sub_141A76490"
+      },
+      {
+        "slot": 3,
+        "address": "0x141a31550",
+        "name": "nullsub_2727"
+      }
+    ]
+  },
+  {
+    "label": "WKS_1120",
+    "vtable": "0x142446c40",
+    "functions": [
+      {
+        "slot": 0,
+        "address": "0x141acf580",
+        "name": "sub_141ACF580"
+      },
+      {
+        "slot": 1,
+        "address": "0x141aced30",
+        "name": "sub_141ACED30"
+      },
+      {
+        "slot": 2,
+        "address": "0x141ace970",
+        "name": "sub_141ACE970"
+      },
+      {
+        "slot": 3,
+        "address": "0x141a31550",
+        "name": "nullsub_2727"
+      }
+    ]
+  },
+  {
+    "label": "WKS_1128",
+    "vtable": "0x14241c090",
+    "functions": [
+      {
+        "slot": 0,
+        "address": "0x141a78cf0",
+        "name": "sub_141A78CF0"
+      },
+      {
+        "slot": 1,
+        "address": "0x141a78350",
+        "name": "sub_141A78350"
+      },
+      {
+        "slot": 2,
+        "address": "0x141a78480",
+        "name": "sub_141A78480"
+      },
+      {
+        "slot": 3,
+        "address": "0x141a31550",
+        "name": "nullsub_2727"
+      }
+    ]
+  },
+  {
+    "label": "WKS_1130",
+    "vtable": "0x14241c340",
+    "functions": [
+      {
+        "slot": 0,
+        "address": "0x141a7b050",
+        "name": "sub_141A7B050"
+      },
+      {
+        "slot": 1,
+        "address": "0x141a79c40",
+        "name": "sub_141A79C40"
+      },
+      {
+        "slot": 2,
+        "address": "0x141a79a10",
+        "name": "sub_141A79A10"
+      },
+      {
+        "slot": 3,
+        "address": "0x141a31550",
+        "name": "nullsub_2727"
+      }
+    ]
+  }
+]

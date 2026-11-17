@@ -1,0 +1,227 @@
+0000000141838610 mov     rax, rsp
+0000000141838613 mov     [rax+10h], rbx
+0000000141838617 mov     [rax+18h], rsi
+000000014183861B push    rbp
+000000014183861C push    rdi
+000000014183861D push    r13
+000000014183861F push    r14
+0000000141838621 push    r15
+0000000141838623 lea     rbp, [rax-1E8h]
+000000014183862A sub     rsp, 2C0h
+0000000141838631 movaps  xmmword ptr [rax-38h], xmm6
+0000000141838635 mov     r13, r9
+0000000141838638 movaps  xmmword ptr [rax-48h], xmm7
+000000014183863C mov     rsi, r8
+000000014183863F movss   xmm7, dword ptr [r9]
+0000000141838644 mov     rbx, rdx
+0000000141838647 subss   xmm7, dword ptr [r8]
+000000014183864C movaps  xmmword ptr [rax-58h], xmm8
+0000000141838651 mov     r14, rcx
+0000000141838654 movss   xmm8, dword ptr [r9+4]
+000000014183865A subss   xmm8, dword ptr [r8+4]
+0000000141838660 movaps  xmmword ptr [rax-68h], xmm9
+0000000141838665 movss   xmm9, dword ptr [r9+8]
+000000014183866B movaps  xmm0, xmm7
+000000014183866E subss   xmm9, dword ptr [r8+8]
+0000000141838674 mulss   xmm0, xmm7
+0000000141838678 mov     [rsp+2E0h+var_2A4], 0
+0000000141838680 movaps  xmm2, xmm8
+0000000141838684 movaps  xmmword ptr [rax-78h], xmm10
+0000000141838689 mulss   xmm2, xmm8
+000000014183868E xorps   xmm10, xmm10
+0000000141838692 movaps  xmm1, xmm9
+0000000141838696 mulss   xmm1, xmm9
+000000014183869B addss   xmm2, xmm0
+000000014183869F xorps   xmm0, xmm0
+00000001418386A2 addss   xmm2, xmm1
+00000001418386A6 ucomiss xmm0, xmm2
+00000001418386A9 ja      short loc_1418386B4
+00000001418386AB xorps   xmm6, xmm6
+00000001418386AE sqrtss  xmm6, xmm2
+00000001418386B2 jmp     short loc_1418386BF
+00000001418386B4 movaps  xmm0, xmm2; X
+00000001418386B7 call    sqrtf
+00000001418386BC movaps  xmm6, xmm0
+00000001418386BF xor     al, al
+00000001418386C1 mov     r15d, 1
+00000001418386C7 movzx   edi, al
+00000001418386CA movaps  xmm1, xmm6
+00000001418386CD comiss  xmm10, xmm6
+00000001418386D1 mov     rcx, rsi
+00000001418386D4 cmovnb  edi, r15d
+00000001418386D8 call    sub_140754DE0
+00000001418386DD movaps  xmm10, [rsp+2E0h+var_78+8]
+00000001418386E6 test    al, al
+00000001418386E8 jz      loc_141838907
+00000001418386EE cmp     dil, r15b
+00000001418386F1 jz      loc_141838907
+00000001418386F7 movss   xmm0, cs:target
+00000001418386FF divss   xmm0, xmm6
+0000000141838703 mulss   xmm8, xmm0
+0000000141838708 mulss   xmm7, xmm0
+000000014183870C mulss   xmm9, xmm0
+0000000141838711 movss   [rsp+2E0h+var_2AC], xmm8
+0000000141838718 movss   xmm8, cs:flt_14211BE4C
+0000000141838721 movss   [rsp+2E0h+var_2B0], xmm7
+0000000141838727 movss   dword ptr [rsp+2E0h+var_2A8], xmm9
+000000014183872E cmp     [r14+11h], r15b
+0000000141838732 jz      short loc_14183873A
+0000000141838734 cmp     [r14+12h], r15b
+0000000141838738 jnz     short loc_141838743
+000000014183873A movss   xmm8, cs:flt_14211BF10
+0000000141838743 cmp     [r14+10h], r15b
+0000000141838747 jnz     short loc_14183874D
+0000000141838749 movaps  xmm8, xmm6
+000000014183874D comiss  xmm6, xmm8
+0000000141838751 movaps  xmm7, xmm8
+0000000141838755 jbe     short loc_141838764
+0000000141838757 movaps  xmm0, xmm6
+000000014183875A divss   xmm0, xmm8
+000000014183875F cvttss2si r15, xmm0
+0000000141838764 mov     eax, [rsi]
+0000000141838766 xor     edi, edi
+0000000141838768 mov     [rbx], eax
+000000014183876A mov     eax, [rsi+4]
+000000014183876D mov     [rbx+4], eax
+0000000141838770 mov     eax, [rsi+8]
+0000000141838773 mov     [rbx+8], eax
+0000000141838776 test    r15d, r15d
+0000000141838779 jz      short loc_1418387F8
+000000014183877B mov     [rsp+2E0h+arg_0], r12
+0000000141838783 lea     r12d, [r15-1]
+0000000141838787 cmp     edi, r12d
+000000014183878A jnz     short loc_1418387A2
+000000014183878C xorps   xmm0, xmm0
+000000014183878F mov     eax, edi
+0000000141838791 movaps  xmm7, xmm6
+0000000141838794 cvtsi2ss xmm0, rax
+0000000141838799 mulss   xmm0, xmm8
+000000014183879E subss   xmm7, xmm0
+00000001418387A2 movaps  xmm3, xmm7
+00000001418387A5 mov     [rsp+2E0h+var_2C0], r13
+00000001418387AA lea     r8, [rsp+2E0h+var_2B0]
+00000001418387AF mov     rdx, rbx
+00000001418387B2 mov     rcx, r14
+00000001418387B5 call    sub_1418389E0
+00000001418387BA mov     eax, [rbx+10h]
+00000001418387BD cmp     eax, 5
+00000001418387C0 jz      short loc_1418387CC
+00000001418387C2 cmp     eax, 1
+00000001418387C5 jle     short loc_1418387CC
+00000001418387C7 cmp     eax, 8
+00000001418387CA jl      short loc_1418387F0
+00000001418387CC test    byte ptr [rbx+14h], 1
+00000001418387D0 jz      short loc_1418387E9
+00000001418387D2 cmp     byte ptr [r14+4], 1
+00000001418387D7 jnz     short loc_1418387E9
+00000001418387D9 mov     [rsp+2E0h+var_2B0], 0
+00000001418387E1 mov     dword ptr [rsp+2E0h+var_2A8], 0
+00000001418387E9 inc     edi
+00000001418387EB cmp     edi, r15d
+00000001418387EE jb      short loc_141838787
+00000001418387F0 mov     r12, [rsp+2E0h+arg_0]
+00000001418387F8 mov     rcx, rbx; a1
+00000001418387FB call    sub_141842C10
+0000000141838800 test    al, al
+0000000141838802 jnz     loc_1418388EB
+0000000141838808 movss   xmm2, dword ptr [rbx]
+000000014183880C movss   xmm3, dword ptr [rbx+8]
+0000000141838811 movaps  xmm1, xmm2
+0000000141838814 subss   xmm1, dword ptr [rsi]
+0000000141838818 movaps  xmm0, xmm3
+000000014183881B mulss   xmm6, xmm6
+000000014183881F subss   xmm0, dword ptr [rsi+8]
+0000000141838824 addss   xmm6, cs:flt_14211BE24
+000000014183882C mulss   xmm1, xmm1
+0000000141838830 mulss   xmm0, xmm0
+0000000141838834 addss   xmm0, xmm1
+0000000141838838 comiss  xmm0, xmm6
+000000014183883B ja      loc_1418388EB
+0000000141838841 movss   xmm1, cs:dword_1422DD088
+0000000141838849 comiss  xmm1, xmm2
+000000014183884C ja      loc_1418388EB
+0000000141838852 movss   xmm0, cs:dword_142195500
+000000014183885A comiss  xmm2, xmm0
+000000014183885D ja      loc_1418388EB
+0000000141838863 movss   xmm4, dword ptr [rbx+4]
+0000000141838868 comiss  xmm1, xmm4
+000000014183886B ja      short loc_1418388EB
+000000014183886D comiss  xmm4, xmm0
+0000000141838870 ja      short loc_1418388EB
+0000000141838872 comiss  xmm1, xmm3
+0000000141838875 ja      short loc_1418388EB
+0000000141838877 comiss  xmm3, xmm0
+000000014183887A ja      short loc_1418388EB
+000000014183887C test    byte ptr [rbx+14h], 4
+0000000141838880 movss   xmm0, cs:flt_14214B59C
+0000000141838888 movss   [rsp+2E0h+var_27C], xmm0
+000000014183888E movss   xmm0, cs:dword_1422DCFFC
+0000000141838896 movss   [rsp+2E0h+var_290], xmm2
+000000014183889C movss   xmm2, cs:flt_14211BDE4
+00000001418388A4 movss   dword ptr [rsp+2E0h+var_280], xmm0
+00000001418388AA movss   [rsp+2E0h+var_28C], xmm4
+00000001418388B0 movss   [rsp+2E0h+var_288], xmm3
+00000001418388B6 mov     [rsp+2E0h+var_2A0], al
+00000001418388BA mov     [rsp+2E0h+var_284], 0
+00000001418388C2 mov     [rsp+2E0h+var_278], al
+00000001418388C6 mov     [rsp+2E0h+var_274], 3F000000h
+00000001418388CE jz      short loc_1418388D8
+00000001418388D0 movss   xmm2, cs:easingFactor
+00000001418388D8 lea     rdx, [rbx+20h]
+00000001418388DC lea     rcx, [rsp+2E0h+var_2A0]
+00000001418388E1 call    sub_1417FF680
+00000001418388E6 jmp     loc_1418389A1
+00000001418388EB mov     eax, [rsi]
+00000001418388ED mov     [rbx], eax
+00000001418388EF mov     eax, [rsi+4]
+00000001418388F2 mov     [rbx+4], eax
+00000001418388F5 mov     eax, [rsi+8]
+00000001418388F8 mov     [rbx+8], eax
+00000001418388FB mov     dword ptr [rbx+10h], 8
+0000000141838902 jmp     loc_1418389A1
+0000000141838907 mov     eax, [rsi]
+0000000141838909 lea     rcx, [rsp+2E0h+var_270]
+000000014183890E movss   xmm0, cs:flt_14214B59C
+0000000141838916 movss   xmm1, cs:easingFactor
+000000014183891E mov     [rbx], eax
+0000000141838920 mov     eax, [rsi+4]
+0000000141838923 mov     [rbx+4], eax
+0000000141838926 mov     eax, [rsi+8]
+0000000141838929 mov     [rbx+8], eax
+000000014183892C movss   [rsp+2E0h+var_27C], xmm0
+0000000141838932 movss   xmm0, cs:dword_1422DCFFC
+000000014183893A movss   [rsp+2E0h+var_274], xmm1
+0000000141838940 movss   xmm1, dword ptr [rsi]
+0000000141838944 movss   [rsp+2E0h+var_290], xmm1
+000000014183894A movss   xmm1, dword ptr [rsi+8]
+000000014183894F movss   dword ptr [rsp+2E0h+var_280], xmm0
+0000000141838955 movss   xmm0, dword ptr [rsi+4]
+000000014183895A movss   [rsp+2E0h+var_288], xmm1
+0000000141838960 movss   [rsp+2E0h+var_28C], xmm0
+0000000141838966 mov     [rsp+2E0h+var_2A0], 0
+000000014183896B mov     [rsp+2E0h+var_284], 0
+0000000141838973 mov     [rsp+2E0h+var_278], 0
+0000000141838978 call    sub_140866210
+000000014183897D xor     r8d, r8d
+0000000141838980 lea     rdx, [rsp+2E0h+var_270]
+0000000141838985 lea     rcx, [rsp+2E0h+var_2A0]
+000000014183898A call    sub_1417FEF60
+000000014183898F cmp     al, r15b
+0000000141838992 jnz     short loc_1418389A1
+0000000141838994 lea     rcx, [rbx+20h]
+0000000141838998 lea     rdx, [rbp+1E0h+var_250]
+000000014183899C call    sub_1408666E0
+00000001418389A1 lea     r11, [rsp+2E0h+var_20]
+00000001418389A9 mov     rbx, [r11+38h]
+00000001418389AD mov     rsi, [r11+40h]
+00000001418389B1 movaps  xmm6, xmmword ptr [r11-10h]
+00000001418389B6 movaps  xmm7, xmmword ptr [r11-20h]
+00000001418389BB movaps  xmm8, xmmword ptr [r11-30h]
+00000001418389C0 movaps  xmm9, xmmword ptr [r11-40h]
+00000001418389C5 mov     rsp, r11
+00000001418389C8 pop     r15
+00000001418389CA pop     r14
+00000001418389CC pop     r13
+00000001418389CE pop     rdi
+00000001418389CF pop     rbp
+00000001418389D0 retn

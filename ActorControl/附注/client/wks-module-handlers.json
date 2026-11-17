@@ -1,0 +1,123 @@
+[
+  {
+    "constructor": "0x141acae50",
+    "vtables": [
+      {
+        "vtable": "0x142446a80",
+        "handler": "0x141a31540",
+        "name": "sub_141A31540",
+        "file": ".local\\notes\\ActorControl-2026-11-16\\client\\141A31540_WKS_SetIntData.c"
+      }
+    ]
+  },
+  {
+    "constructor": "0x141a2d1d0",
+    "vtables": [
+      {
+        "vtable": "0x1423e5dd0",
+        "handler": "0x141a2d7f0",
+        "name": "sub_141A2D7F0",
+        "file": ".local\\notes\\ActorControl-2026-11-16\\client\\141A2D7F0_WKS_SetIntData.c"
+      }
+    ]
+  },
+  {
+    "constructor": "0x141a6e960",
+    "vtables": [
+      {
+        "vtable": "0x14241bb20",
+        "handler": "0x141a6f260",
+        "name": "sub_141A6F260",
+        "file": ".local\\notes\\ActorControl-2026-11-16\\client\\141A6F260_WKS_SetIntData.c"
+      }
+    ]
+  },
+  {
+    "constructor": "0x141a75ba0",
+    "vtables": [
+      {
+        "vtable": "0x14241bed0",
+        "handler": "0x141a762b0",
+        "name": "sub_141A762B0",
+        "file": ".local\\notes\\ActorControl-2026-11-16\\client\\141A762B0_WKS_SetIntData.c"
+      }
+    ]
+  },
+  {
+    "constructor": "0x141ace3c0",
+    "vtables": [
+      {
+        "vtable": "0x142446c40",
+        "handler": "0x141aced30",
+        "name": "sub_141ACED30",
+        "file": ".local\\notes\\ActorControl-2026-11-16\\client\\141ACED30_WKS_SetIntData.c"
+      }
+    ]
+  },
+  {
+    "constructor": "0x141a77da0",
+    "vtables": [
+      {
+        "vtable": "0x14241c090",
+        "handler": "0x141a78350",
+        "name": "sub_141A78350",
+        "file": ".local\\notes\\ActorControl-2026-11-16\\client\\141A78350_WKS_SetIntData.c"
+      }
+    ]
+  },
+  {
+    "constructor": "0x141a78d90",
+    "vtables": [
+      {
+        "vtable": "0x14241c340",
+        "handler": "0x141a79c40",
+        "name": "sub_141A79C40",
+        "file": ".local\\notes\\ActorControl-2026-11-16\\client\\141A79C40_WKS_SetIntData.c"
+      }
+    ]
+  },
+  {
+    "constructor": "0x141a70810",
+    "vtables": [
+      {
+        "vtable": "0x14241bcf8",
+        "handler": "0x141a709c0",
+        "name": "sub_141A709C0",
+        "file": ".local\\notes\\ActorControl-2026-11-16\\client\\141A709C0_WKS_SetIntData.c"
+      }
+    ]
+  },
+  {
+    "constructor": "0x141a6d4e0",
+    "vtables": [
+      {
+        "vtable": "0x14241b970",
+        "handler": "0x141a6d570",
+        "name": "sub_141A6D570",
+        "file": ".local\\notes\\ActorControl-2026-11-16\\client\\141A6D570_WKS_SetIntData.c"
+      }
+    ]
+  },
+  {
+    "constructor": "0x141acfdf0",
+    "vtables": [
+      {
+        "vtable": "0x142446e00",
+        "handler": "0x141a31540",
+        "name": "sub_141A31540",
+        "file": ".local\\notes\\ActorControl-2026-11-16\\client\\141A31540_WKS_SetIntData.c"
+      }
+    ]
+  },
+  {
+    "constructor": "0x141ad4790",
+    "vtables": [
+      {
+        "vtable": "0x142446fb0",
+        "handler": "0x141ad48a0",
+        "name": "sub_141AD48A0",
+        "file": ".local\\notes\\ActorControl-2026-11-16\\client\\141AD48A0_WKS_SetIntData.c"
+      }
+    ]
+  }
+]

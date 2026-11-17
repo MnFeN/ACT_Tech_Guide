@@ -1,0 +1,32 @@
+[
+  {
+    "vtable": "0x142197100",
+    "slot": 38,
+    "address": "0x14089a870",
+    "name": "sub_14089A870"
+  },
+  {
+    "vtable": "0x142197100",
+    "slot": 39,
+    "address": "0x140907490",
+    "name": "sub_140907490"
+  },
+  {
+    "vtable": "0x142197100",
+    "slot": 40,
+    "address": "0x14089e6e0",
+    "name": "nullsub_1298"
+  },
+  {
+    "vtable": "0x142197100",
+    "slot": 41,
+    "address": "0x1409075b0",
+    "name": "sub_1409075B0"
+  },
+  {
+    "vtable": "0x142197100",
+    "slot": 42,
+    "address": "0x14089e690",
+    "name": "nullsub_1293"
+  }
+]
